@@ -150,7 +150,7 @@ app.listen(port, function() {
 
 function getListOfImages() {
     let images = fs.readdirSync('./uploads/').map(file => (file));
-    images.reverse();
+    images.sort().reverse();
     return images;
 }
 
