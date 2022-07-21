@@ -72,7 +72,7 @@ app.post('/uploadTemp', express.json(), function(req, res) {
 // Upload image from Pi
 app.post('/uploadImage', upload.single('image'), (req, res) => {
     const tempPath = req.file.path;
-    const targetPath = path.join(__dirname, "./uploads/image.jpg");
+    const targetPath = path.join(__dirname, "/uploads/" + req.file.originalname);
     if (path.extname(req.file.originalname).toLowerCase() === ".jpg") {
         fs.rename(tempPath, targetPath, err => {
             if (err) return handleError(err, res);

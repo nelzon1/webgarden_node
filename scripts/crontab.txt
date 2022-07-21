@@ -1,0 +1,2 @@
+*/1 * * * * /home/pi/webgarden/scripts/getTemp.sh 2>/home/pi/webgarden/logs/cronlog
+0 0-10/2 * * * /home/pi/webgarden/scripts/archiveImage.sh 2>/home/pi/webgarden/logs/cronlog
