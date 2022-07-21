@@ -1,0 +1,8 @@
+node_modules/
+uploads/
+appDB.sqlite3
+dbinfo.json
+# Logs
+logs
+*.log
+npm-debug.log*

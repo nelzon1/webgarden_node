@@ -1,0 +1,176 @@
+html,
+body {
+    height: 100%;
+    background-color: #727981;
+}
+
+.chartButtonContainer {
+    display: block;
+}
+
+.chartContainer {
+    border: 2px solid;
+    border-radius: 20px;
+    padding: 10px;
+    border-color: slategray;
+}
+
+.chartButtonContainer {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.button {
+    display: inline-block;
+    height: 95%;
+    width: 95%;
+    font-size: 1rem;
+}
+
+.tempContainer {
+    display: grid;
+    justify-content: center;
+}
+
+.tempBox {
+    color: black;
+    border-radius: 10px;
+    border: 2px solid;
+    border-color: black;
+    text-align: center;
+    margin: 0px;
+    flex: 0 0 90%;
+    height: auto;
+}
+
+.temp {
+    font-size: 8vw;
+    line-height: 100%;
+    display: block;
+    display: block;
+    font-weight: bolder;
+    text-shadow: 2px 2px 5px black;
+}
+
+@media (min-width: 992px) {
+    .temp {
+        font-size: 5vw;
+    }
+    .tempBox {
+        margin: 10px 5px 10px 5px;
+        height: 10vw;
+    }
+}
+
+.TempLabel {
+    font-size: 3vw;
+    line-height: 150%;
+    display: block;
+}
+
+#curTemp {
+    text-shadow: 2px 2px 5px black;
+}
+
+.tempGood {
+    color: rgb(27, 133, 27);
+}
+
+.tempHot {
+    color: rgb(133, 34, 27);
+}
+
+.tempCold {
+    color: rgb(27, 85, 133);
+}
+
+.dashBackground {
+    height: calc(100vh - 56px);
+}
+
+.imageListScrollContainer {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 40vw;
+    width: 100%;
+    border-radius: 20px;
+    border: 2px solid corn;
+}
+
+.imageListItemBlock {
+    height: 2rem;
+    background-color: cornflowerblue;
+    border: 1px solid blue;
+    width: 100%;
+    text-align: left;
+    line-height: 50%;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.imgContainer {
+    overflow: hidden;
+    max-height: 40vw;
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+#latestImage {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    border-radius: 20px;
+    border: 2px solid orange;
+}
+
+#qualityImage {
+    width: 90%;
+    height: auto;
+}
+
+.vertSeparater {
+    min-height: 100px;
+    display: inline-block;
+    background: #BBBBBB;
+    width: 2px;
+}
+
+
+/** Loading Spinner */
+
+.loadingWrapper {
+    position: absolute;
+    z-index: 2;
+    height: 95%;
+    width: 95%;
+    background: #fff;
+    opacity: 0.3;
+    text-align: center;
+    line-height: 40vw;
+    font-size: 4vw;
+}
+
+.spinner {
+    width: 30vw;
+    height: 30vw;
+    opacity: 0.8;
+    border-radius: 50%;
+    border: 40px solid #fff;
+    border-top: 40px solid cornflowerblue;
+    animation: spin 2s linear infinite;
+    z-index: 5;
+    position: absolute;
+    left: 27%;
+    top: 13%;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

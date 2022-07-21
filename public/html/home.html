@@ -1,0 +1,149 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Web Garden</title>
+  <meta name="description" content="Web Garden">
+  <meta name="author" content="JNelson">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  <style>
+    canvas{
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+</style>
+<link rel="stylesheet" href="/static/css/dash.css">
+</head>
+
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Web Garden</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#"> Dashboard <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#"> Temperature </a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#"> Build Information </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container-fluid dashBackground">
+    <br>
+    <div class="row vdivide">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-lg-10 col-sm-12" >
+            <div class="chartContainer">
+            <canvas id="canvas"></canvas>
+            </div>
+            <br>
+            <div class="chartButtonContainer">
+              <button id="buttonRefresh" class="button btn btn-primary">Refresh</button>
+              <button id="buttonRefresh24h" class="button btn btn-primary">Refresh 24 Hours</button>
+              <button id="buttonRefresh2d" class="button btn btn-primary">Refresh 2 Days</button>
+              <button id="buttonRefresh7d" class="button btn btn-primary">Refresh 7 Days</button>
+              <button id="buttonRefreshAll" class="button btn btn-primary">Refresh All</button>
+            </div>
+          </div>
+          <div class="col-lg-2 col-sm-12">
+            <div class="row tempContainer">
+              <div class="row">
+                <div class="tempBox col-lg-12 col-sm-4">
+                  <div class="TempLabel">Current</div>
+                  <div id="curTemp" class="temp tempGood">25.F&deg</div>
+                </div>
+                <div class="tempBox col-lg-12 col-sm-4">
+                  <div class="TempLabel">Average</div>
+                  <div id="avgTemp" class="temp tempCold">69.F&deg</div>
+                </div>
+                <div class="tempBox col-lg-12 col-sm-4">
+                  <div class="TempLabel">Maximum</div>
+                  <div id="maxTemp" class="temp tempHot">20.F&deg</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-4">
+        <br>
+        <div class="imageListWrapper">
+          <div class="imageListScrollContainer">
+            <div class="imageListScrollView">
+                <div class="imageListContainer">
+                    <ul class="imageList list-group">
+                        {% for image in imageList %}
+                            <li class="imageListItem list-group-item list-group-item-action">
+                                <div class="">
+                                    {{ image }}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+      </div>
+      <div class="col-8 imgContainer">
+        <br>
+        <img src="/static/images/LatestImage.jpg" id="latestImage">
+        <div id="loadingWrapper" class="loadingWrapper" style="display:none">
+          Loading...
+        </div>
+        <div id="spinner" class="spinner" style="display:none"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col" style="display:none" id="temps">
+        {"data": [{"temp": 21.5, "time": "23:45:32"}, {"temp": 21.5, "time": "23:44:31"}, {"temp": 21.5, "time": "23:43:30"}, {"temp": 21.5, "time": "23:42:29"}, {"temp": 21.5, "time": "23:41:28"}, {"temp": 21.5, "time": "23:40:27"}, {"temp": 21.5, "time": "23:39:26"}, {"temp": 21.5, "time": "23:38:25"}, {"temp": 21.5, "time": "23:37:23"}, {"temp": 21.5, "time": "23:36:22"}, {"temp": 21.5, "time": "23:35:21"}, {"temp": 21.5, "time": "23:34:20"}, {"temp": 21.5, "time": "23:33:19"}, {"temp": 21.5, "time": "23:32:18"}, {"temp": 21.5, "time": "23:31:17"}, {"temp": 21.5, "time": "23:30:14"}, {"temp": 21.5, "time": "23:29:13"}, {"temp": 21.5, "time": "23:28:12"}, {"temp": 21.5, "time": "23:27:10"}, {"temp": 21.5, "time": "23:26:09"}]}
+      </div>
+    </div>
+  </div>
+  <div style="width:60%;">
+
+  </div>
+  <script
+			  src="https://code.jquery.com/jquery-3.6.0.min.js"
+			  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+			  crossorigin="anonymous"></script>
+  <script src="/static/js/utils.js"></script>
+  <script src="/static/js/chart_3-8-0.js"></script>
+  <script src="/static/js/chartdriver.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

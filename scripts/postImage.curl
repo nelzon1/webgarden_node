@@ -1,0 +1,5 @@
+curl \
+ -F "filecomment=Webgarden image" \
+ -F "date = getDate" \
+ -F image=@\home\ubuntu\man_old.jpg \
+ 192.168.1.12:8999/uploadImage
