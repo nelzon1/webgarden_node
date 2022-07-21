@@ -153,7 +153,6 @@ function loadTempData(config) {
 
 document.getElementById('buttonRefresh').addEventListener('click', function() {
     loadTempData({});
-    getLatestImage();
     window.sessionStorage.count = 0;
 });
 
@@ -164,7 +163,6 @@ document.getElementById('buttonRefresh24h').addEventListener('click', function()
         startDate: curDate,
         count: 288
     });
-    getLatestImage();
     window.sessionStorage.count = 1;
 });
 document.getElementById('buttonRefresh2d').addEventListener('click', function() {
@@ -174,7 +172,6 @@ document.getElementById('buttonRefresh2d').addEventListener('click', function() 
         startDate: curDate,
         count: 576
     });
-    getLatestImage();
     window.sessionStorage.count = 2;
 });
 document.getElementById('buttonRefresh7d').addEventListener('click', function() {
@@ -184,7 +181,6 @@ document.getElementById('buttonRefresh7d').addEventListener('click', function() 
         startDate: curDate,
         count: 1008
     });
-    getLatestImage();
     window.sessionStorage.count = 7;
 });
 document.getElementById('buttonRefreshAll').addEventListener('click', function() {
@@ -194,7 +190,6 @@ document.getElementById('buttonRefreshAll').addEventListener('click', function()
         startDate: curDate,
         count: -1
     });
-    getLatestImage();
     window.sessionStorage.count = -1;
 });
 
@@ -325,4 +320,4 @@ function refreshData() {
 
 setInterval(heartbeat, 60000);
 
-setInterval(getLatestImage, 60000 * 5);
+//setInterval(getLatestImage, 60000 * 5);
