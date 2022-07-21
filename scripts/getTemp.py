@@ -4,7 +4,7 @@ import os
 import requests
 import json
 
-URL = 'http://cloud.jpnelson.ca:8999/uploadTemp'
+URL = 'http://cloud.jpnelson.ca/uploadTemp'
 
 def uploadTemp(tempData, timeStr):
     myobj = {'datetime':timeStr, 

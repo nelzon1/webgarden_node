@@ -18,6 +18,6 @@ curl \
  -F "filecomment=Webgarden image" \
  -F "date = getDate" \
  -F image=@$_file \
- cloud.jpnelson.ca:8999/uploadImage
+ cloud.jpnelson.ca/uploadImage
 
 rm $_file
