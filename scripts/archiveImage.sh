@@ -2,7 +2,7 @@
 #
 # Take an image and send it cloud server
 # Take the image
-./getImage.sh
+/home/pi/webgarden/scripts/getImage.sh
 
 ## Get current date ##
 _now=$(date +"%Y-%m-%d_%H-%M-%S")
