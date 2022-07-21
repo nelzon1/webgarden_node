@@ -5,7 +5,7 @@ const sqlite3 = require("sqlite3");
 const path = require("path");
 const fs = require("fs");
 var app = express();
-const port = 8999;
+const port = 3000;
 
 let upload = multer({ dest: "./uploads/" });
 
@@ -145,7 +145,6 @@ app.use("/static", express.static(path.join(__dirname, 'public')));
 
 app.listen(port, function() {
     console.log(`App listening on port ${port}!`);
-
 });
 
 function getListOfImages() {
