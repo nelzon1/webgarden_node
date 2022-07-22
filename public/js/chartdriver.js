@@ -10,20 +10,29 @@ const drawBackgroundColor = {
     }
 };
 
+var globalOptions = {
+    heartbeatOn : true,
+    //graphSetting can be minute, hour or day
+    graphSetting : "hour"
+};
+
+var targetFill = {
+    target: { value: 24.5 },
+    above: window.chartColors.orange, // Area will be red above the origin
+    below: window.chartColors.blue // And blue below the origin
+};
+
 var config = {
     type: 'line',
     data: {
         labels: [],
         datasets: [{
             label: 'Temperature',
+            lineTension: 0.3,
             backgroundColor: 'rgb(0, 0, 0)',
             borderColor: 'rgb(0, 0, 0)',
             pointRadius: 1,
-            fill: {
-                target: { value: 24.5 },
-                above: window.chartColors.orange, // Area will be red above the origin
-                below: window.chartColors.blue // And blue below the origin
-            }
+            fill: targetFill
         }]
     },
     //plugins: [drawBackgroundColor],
@@ -91,19 +100,54 @@ function getMaxTemp(temperatures) {
 function updateData() {
 
     var tempData = JSON.parse(document.getElementById('temps').innerText);
-    var temps = [];
-    var times = [];
+    var temps = [],
+        times = [],
+        maxTemps = [],
+        minTemps = [];
     tempData.forEach(function(row) {
         temps.push(Number(row.Temperature));
-        times.push( (new Date(Date.parse(row.Datetime))).toLocaleString('en-US', { hour12: false}) );
+        if (row.MaxTemperature) maxTemps.push(row.MaxTemperature);
+        if (row.MinTemperature) minTemps.push(row.MinTemperature);
+        if (row.Datetime.length === 10) {
+            times.push(row.Datetime);
+        }
+        else {
+            row.Datetime = row.Datetime.length === 13 ? row.Datetime += ":00:00" : row.Datetime;
+            times.push( (new Date(Date.parse(row.Datetime))).toLocaleString('en-US', { hour12: false}) );
+        }
     })
     temps.reverse();
+    maxTemps.reverse();
+    minTemps.reverse();
     times.reverse();
+    config.data.datasets = [config.data.datasets[0]];
+    config.data.datasets[0].fill = targetFill;
     config.data.datasets[0].data = temps;
+    if (maxTemps.length > 0 && minTemps.length > 0) {
+        config.data.datasets[0].fill = false;
+        let maxLine = {
+            label: "Max Temperature",
+            data: maxTemps,
+            lineTension: 0.3,
+            fill: false,
+            borderColor: 'red',
+            fillColor: '#ff9999'
+        };
+        let minLine = {
+            label: "Min Temperature",
+            data: minTemps,
+            lineTension: 0.3,
+            fill: +1,
+            borderColor: 'blue',
+            fillColor: '#99b3ff'
+        };
+        config.data.datasets.push(maxLine);
+        config.data.datasets.push(minLine);
+    }
     config.data.labels = times;
     window.sessionStorage.curTemp = Number(temps.slice(-1)[0]).toFixed(2);
     window.sessionStorage.avgTemp = Number(temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(2);
-    window.sessionStorage.maxTemp = getMaxTemp(temps).toFixed(2);
+    window.sessionStorage.maxTemp = maxTemps.length > 0 ? getMaxTemp(maxTemps).toFixed(2) : getMaxTemp(temps).toFixed(2);
 
 }
 
@@ -145,45 +189,59 @@ function loadTempData(config) {
             }
         }
     };
-    let URL = config.count ? '/getTemps/' + config.count : '/getTemps/100'
+    let query = "?graphSetting=" + globalOptions.graphSetting,      
+        URL = config.count ? '/getTemps/' + config.count + query : '/getTemps/100' + query;
     xmlhttp.open('GET', URL, true);
     xmlhttp.send();
 }
 
 
 document.getElementById('buttonRefresh').addEventListener('click', function() {
-    loadTempData({});
+    globalOptions.graphSetting = 'minute';
+    globalOptions.heartbeatOn = true;
+    loadTempData({days: 0, count: 6});
     window.sessionStorage.count = 0;
 });
 
 document.getElementById('buttonRefresh24h').addEventListener('click', function() {
+    globalOptions.graphSetting = 'minute';
+    globalOptions.heartbeatOn = true;
     let curDate = new Date();
     curDate.setDate(curDate.getDate() - 1);
     loadTempData({
+        days: 1,
         startDate: curDate,
-        count: 288
+        count: 24
     });
     window.sessionStorage.count = 1;
 });
 document.getElementById('buttonRefresh2d').addEventListener('click', function() {
+    globalOptions.graphSetting = 'hour';
+    globalOptions.heartbeatOn = false;
     let curDate = new Date();
     curDate.setDate(curDate.getDate() - 2);
     loadTempData({
+        days: 2,
         startDate: curDate,
-        count: 576
+        count: 48
     });
     window.sessionStorage.count = 2;
 });
 document.getElementById('buttonRefresh7d').addEventListener('click', function() {
+    globalOptions.graphSetting = 'hour';
+    globalOptions.heartbeatOn = false;
     let curDate = new Date();
     curDate.setDate(curDate.getDate() - 7);
     loadTempData({
+        days: 7,
         startDate: curDate,
-        count: 1008
+        count: 168
     });
     window.sessionStorage.count = 7;
 });
 document.getElementById('buttonRefreshAll').addEventListener('click', function() {
+    globalOptions.graphSetting = 'day';
+    globalOptions.heartbeatOn = false;
     let curDate = new Date();
     curDate.setDate(curDate.getDate() - 1);
     loadTempData({
@@ -226,6 +284,9 @@ function fetchImage() {
 
 
 function heartbeat() {
+    if (!globalOptions.heartbeatOn) {
+        return;
+    }
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == XMLHttpRequest.DONE) { // XMLHttpRequest.DONE == 4
@@ -307,6 +368,7 @@ function loadImageList() {
 
 window.onload = function() {
     window.sessionStorage.count = 0;
+    globalOptions.graphSetting = 'minute';
     loadTempData({ count: window.sessionStorage.count });
     getLatestImage();
     var ctx = document.getElementById('canvas').getContext('2d');

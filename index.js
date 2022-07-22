@@ -15,7 +15,7 @@ var latestTemperature = null,
 
 function initialize() {
     getLatestTemperature(() => {});
-    getTemperatureRange(60, () => {});
+    getTemperatureRange(6, 'minute', () => {});
     getLatestImage();
     setTimeout(() => {
         getLatestTemperature(() => {});
@@ -124,7 +124,8 @@ app.get("/getTemp", (req, res) => {
 
 // Get latest temperature range
 app.get("/getTemps/:range", (req, res) => {
-    getTemperatureRange(req.params.range, function() {
+    let graphSetting = req.query.graphSetting ? req.query.graphSetting : "minute";
+    getTemperatureRange(req.params.range, graphSetting, function() {
         let results = lastTemperatureData ? lastTemperatureData : [{}];
         res.send(JSON.stringify(results));
     },
@@ -172,17 +173,35 @@ function getLatestTemperature(successCallback, errorCallback = errorHandler) {
     conn.close();
 }
 
-function getTemperatureRange(range, successCallback, errorCallback = errorHandler) {
+function getTemperatureRange(range, group="minute", successCallback, errorCallback = errorHandler) {
     let conn = openDBConnection(),
         sqlQuery;
     range = parseInt(range);
-    if (range === -1){
-        sqlQuery = "SELECT Temperature, Datetime FROM Temperature ORDER BY TemperatureID DESC;";
-    }
-    else {
-        range = range > 2 ? range * 5 : 300;
+    range = range > 2 ? range : 6;
+    if (group === 'minute') { 
+        range = range * 60;
         sqlQuery = `SELECT Temperature, Datetime FROM Temperature ORDER BY TemperatureID DESC LIMIT ${range};`
     } 
+    else if (group === 'hour') {
+        //range is already in hours
+        sqlQuery = `SELECT ROUND(AVG(Temperature), 3 ) "Temperature", 
+                    ROUND(MAX(Temperature), 3 ) "MaxTemperature",
+                    ROUND(MIN(Temperature), 3 ) "MinTemperature",
+                    SUBSTR(Datetime,0,14) "Datetime"
+                    FROM Temperature
+                    GROUP BY SUBSTR(Datetime,0,14)
+                    ORDER BY SUBSTR(Datetime,0,14) DESC limit ${range};`;
+    }
+    else if (group ==='day'){
+        //range = (~~(range / 24));
+        sqlQuery = `SELECT ROUND(AVG(Temperature), 3 ) "Temperature", 
+                    ROUND(MAX(Temperature), 3 ) "MaxTemperature",
+                    ROUND(MIN(Temperature), 3 ) "MinTemperature",
+                    SUBSTR(Datetime,0,11) "Datetime"
+                    FROM Temperature
+                    GROUP BY SUBSTR(Datetime,0,11)
+                    ORDER BY SUBSTR(Datetime,0,11) DESC;`;
+    }
     conn.all(sqlQuery, function(err, results) {
             if (err) {
                 errorCallback(err);
