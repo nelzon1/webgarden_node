@@ -31,6 +31,7 @@ body {
 .tempContainer {
     display: grid;
     justify-content: center;
+    padding-top: 2vw;
 }
 
 .tempBox {
@@ -58,7 +59,7 @@ body {
         font-size: 5vw;
     }
     .tempBox {
-        margin: 10px 5px 10px 5px;
+        margin: 10px 0px 10px 0px;
         height: 10vw;
     }
 }
@@ -86,7 +87,7 @@ body {
 }
 
 .dashBackground {
-    height: calc(100vh - 56px);
+    height: calc(100vh - 74px);
 }
 
 .imageListScrollContainer {
