@@ -16,7 +16,8 @@ var latestTemperature = null,
 function initialize() {
     getLatestTemperature(() => {});
     getTemperatureRange(6, 'minute', () => {});
-    getLatestImage();
+    getListOfImages();
+    //getLatestImage();
     setTimeout(() => {
         getLatestTemperature(() => {});
     }, 6000);
@@ -94,6 +95,13 @@ app.post('/uploadImage', upload.single('image'), (req, res) => {
 
 // Get image
 app.get("/getImage/:fname", (req, res) => {
+    //Initial page load will grab the latest image to show. List is initalized on start-up
+    //and updates every time the list function is called (page loads).
+    if (req.params.fname && req.params.fname === 'LatestImage'){
+        req.params.fname = global.imageList.length > 0 
+                         ? global.imageList[0].substring(0,global.imageList[0].length - 4) 
+                         : req.params.fname;
+    }
     filePath = path.join(__dirname, "uploads/", req.params.fname + ".jpg");
     try {
         res.sendFile(filePath);
@@ -151,6 +159,7 @@ app.listen(port, function() {
 function getListOfImages() {
     let images = fs.readdirSync('./uploads/').map(file => (file));
     images.sort().reverse();
+    global.imageList = images;
     return images;
 }
 
@@ -228,7 +237,9 @@ function saveTemperature(temperature, successCallback, errorCallback = errorHand
 }
 
 function getLatestImage() {
+    if (global.imageList && global.imageList.length > 0 ) {
 
+    }
 }
 
 function errorHandler(err) {
